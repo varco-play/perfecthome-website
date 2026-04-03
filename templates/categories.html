@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Categories" %}{% endblock %}
+{% block nav_categories %}active{% endblock %}
+
+{% block content %}
+<div class="pt-16 lg:pt-20">
+
+  <!-- Header -->
+  <div class="bg-cream py-16">
+    <div class="max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div class="flex items-center gap-3 mb-4">
+        <a href="{% url 'core:home' %}" class="breadcrumb-item">{% trans "Home" %}</a>
+        <span class="text-warm-gray text-xs">/</span>
+        <span class="text-xs uppercase tracking-widest text-charcoal">{% trans "Categories" %}</span>
+      </div>
+      <p class="section-label mb-3">{% trans "Browse by" %}</p>
+      <h1 class="section-title">{% trans "All Categories" %}</h1>
+    </div>
+  </div>
+
+  <div class="max-w-screen-xl mx-auto px-6 lg:px-10 py-14">
+
+    <!-- Big feature categories grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      {% for cat in categories|default:'' %}
+      <a href="{{ cat.get_absolute_url }}" class="category-card {% if forloop.counter == 1 %}md:col-span-2 lg:col-span-1{% endif %}" style="aspect-ratio: {% if forloop.counter == 1 %}16/9{% else %}3/4{% endif %};">
+        {% if cat.image %}
+        <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+        {% else %}
+        <img src="{% static 'img/plumbing/banner.jpg' %}" onerror='this.onerror=null;this.src="{% static "img/plumbing/banner.svg" %}";' alt="{{ cat.name }}">
+        {% endif %}
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <p class="text-xs text-accent-light uppercase tracking-widest mb-2">{{ cat.product_count }} {% trans "products" %}</p>
+          <h2 class="text-white font-display text-3xl font-light">{{ cat.name }}</h2>
+          {% if cat.description %}
+          <p class="text-white/60 text-sm mt-1 line-clamp-1">{{ cat.description }}</p>
+          {% endif %}
+        </div>
+      </a>
+      {% empty %}
+      <div class="col-span-full">
+        <p class="text-sm text-stone">{% trans "No categories available yet." %}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Smaller categories -->
+    <div class="divider my-12"></div>
+    <p class="section-label mb-4">{% trans "More" %}</p>
+    <h2 class="font-display text-3xl font-light text-charcoal mb-4">{% trans "More Categories" %}</h2>
+    <p class="text-sm text-stone">{% trans "No additional categories available yet." %}</p>
+
+  </div>
+</div>
+{% endblock %}

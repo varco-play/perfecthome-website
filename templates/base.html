@@ -1,0 +1,240 @@
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'uz' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Perfect Home{% endblock %} — {% trans "Premium Home Goods" %}</title>
+  <meta name="description" content="{% block meta_description %}{% trans "Perfect Home — premium home goods and interior products in Uzbekistan." %}{% endblock %}">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#F7F4EF',
+            stone: '#8C8279',
+            'warm-gray': '#D4CFC9',
+            accent: '#B5956A',
+            'accent-light': '#D4B896',
+            charcoal: '#1A1A1A',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-white">
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-warm-gray transition-all duration-300">
+  <div class="max-w-screen-xl mx-auto px-6 lg:px-10">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+
+      <!-- Logo -->
+      <a href="{% url 'core:home' %}" class="flex items-center gap-3 group">
+        <img
+          src="{% static 'img/brand-logo.png' %}"
+          alt="Perfect Home"
+          class="h-10 lg:h-12 w-auto object-contain"
+        >
+        <span class="sr-only">Perfect Home</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="{% url 'core:home' %}" class="nav-link {% block nav_home %}{% endblock %}">{% trans "Home" %}</a>
+        <a href="{% url 'products:catalog' %}" class="nav-link {% block nav_products %}{% endblock %}">{% trans "Products" %}</a>
+        <a href="{% url 'brands:list' %}" class="nav-link {% block nav_brands %}{% endblock %}">{% trans "Brands" %}</a>
+        <a href="{% url 'categories:list' %}" class="nav-link {% block nav_categories %}{% endblock %}">{% trans "Categories" %}</a>
+        <a href="{% url 'core:about' %}" class="nav-link {% block nav_about %}{% endblock %}">{% trans "About" %}</a>
+        <a href="{% url 'core:contact' %}" class="nav-link {% block nav_contact %}{% endblock %}">{% trans "Contact" %}</a>
+      </div>
+
+      <!-- Right: Lang + Mobile btn -->
+      <div class="flex items-center gap-3">
+        <!-- Language switcher -->
+        <div class="hidden sm:flex items-center gap-1">
+          {% with path=request.get_full_path|slice:'3:'|default:'/' %}
+          <a href="/uz{{ path }}" class="lang-btn {% if LANGUAGE_CODE == 'uz' %}active{% endif %}">UZ</a>
+          <a href="/ru{{ path }}" class="lang-btn {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">RU</a>
+          {% endwith %}
+        </div>
+
+        <!-- Mobile menu button -->
+        <button id="menu-btn" class="lg:hidden flex flex-col gap-1.5 p-2 cursor-pointer" aria-label="{% trans 'Open menu' %}">
+          <span class="w-6 h-px bg-charcoal block transition-all"></span>
+          <span class="w-6 h-px bg-charcoal block transition-all"></span>
+          <span class="w-4 h-px bg-charcoal block transition-all ml-auto"></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="fixed inset-0 bg-white z-[999] px-8 pt-24 pb-10">
+  <button id="menu-close" class="absolute top-6 right-6 text-3xl text-stone font-light leading-none" aria-label="{% trans 'Close menu' %}">&times;</button>
+  <div class="flex flex-col gap-6">
+    <a href="{% url 'core:home' %}" class="font-display text-4xl font-light text-charcoal hover:text-accent transition-colors">{% trans "Home" %}</a>
+    <a href="{% url 'products:catalog' %}" class="font-display text-4xl font-light text-charcoal hover:text-accent transition-colors">{% trans "Products" %}</a>
+    <a href="{% url 'brands:list' %}" class="font-display text-4xl font-light text-charcoal hover:text-accent transition-colors">{% trans "Brands" %}</a>
+    <a href="{% url 'categories:list' %}" class="font-display text-4xl font-light text-charcoal hover:text-accent transition-colors">{% trans "Categories" %}</a>
+    <a href="{% url 'core:about' %}" class="font-display text-4xl font-light text-charcoal hover:text-accent transition-colors">{% trans "About" %}</a>
+    <a href="{% url 'core:contact' %}" class="font-display text-4xl font-light text-charcoal hover:text-accent transition-colors">{% trans "Contact" %}</a>
+  </div>
+  <div class="flex gap-2 mt-10">
+    {% with path=request.get_full_path|slice:'3:'|default:'/' %}
+    <a href="/uz{{ path }}" class="lang-btn {% if LANGUAGE_CODE == 'uz' %}active{% endif %}">UZ</a>
+    <a href="/ru{{ path }}" class="lang-btn {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">RU</a>
+    {% endwith %}
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════ -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="bg-charcoal text-warm-gray">
+  <!-- Top footer -->
+  <div class="max-w-screen-xl mx-auto px-6 lg:px-10 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+
+    <!-- Brand Column -->
+    <div class="lg:col-span-1">
+      <div class="mb-4">
+        <img
+          src="{% static 'img/brand-logo.png' %}"
+          alt="Perfect Home"
+          class="h-12 w-auto object-contain"
+        >
+      </div>
+      <p class="text-sm text-stone leading-relaxed mb-6">{% trans "Perfect Home was founded with one mission — to provide high-quality and modern construction materials for home and interior." %}</p>
+    </div>
+
+    <!-- Navigation -->
+    <div>
+      <p class="footer-label">{% trans "Navigation" %}</p>
+      <div class="flex flex-col gap-3">
+        <a href="{% url 'core:home' %}" class="footer-link">{% trans "Home" %}</a>
+        <a href="{% url 'products:catalog' %}" class="footer-link">{% trans "Products" %}</a>
+        <a href="{% url 'brands:list' %}" class="footer-link">{% trans "Brands" %}</a>
+        <a href="{% url 'categories:list' %}" class="footer-link">{% trans "Categories" %}</a>
+        <a href="{% url 'core:about' %}" class="footer-link">{% trans "About Us" %}</a>
+        <a href="{% url 'core:contact' %}" class="footer-link">{% trans "Contact" %}</a>
+      </div>
+    </div>
+      
+    <!-- Contact -->
+    <div>
+      <p class="footer-label">{% trans "Contact" %}</p>
+      <div class="flex flex-col gap-4">
+        <div>
+          <p class="text-xs text-stone uppercase tracking-widest mb-1">{% trans "Address" %}</p>
+          <p class="text-sm leading-relaxed">{% trans "Almazor district, Usta Shirin 124" %}</p>
+        </div>
+        <div>
+          <p class="text-xs text-stone uppercase tracking-widest mb-1">{% trans "Phone" %}</p>
+          <a href="tel:+998 93-592-61-66" class="footer-link text-sm">+998 93-592-61-66</a>
+        </div>
+        <div>
+          <p class="text-xs text-stone uppercase tracking-widest mb-1">{% trans "Working Hours" %}</p>
+          <p class="text-sm">{% trans "09.00–18.00 Mon–Sat, 09.00–15.00 Sun" %}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t border-white/10">
+    <div class="max-w-screen-xl mx-auto px-6 lg:px-10 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-xs text-stone">© {% now "Y" %} Perfect Home. {% trans "All rights reserved." %}</p>
+      <p class="text-xs text-stone">{% trans "Designed with care in Tashkent" %}</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     ORDER MODAL (Global)
+═══════════════════════════════════════════ -->
+<div id="order-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button id="close-modal" class="modal-close" aria-label="{% trans 'Close' %}">&times;</button>
+    <p class="section-label mb-4">{% trans "Request a product" %}</p>
+    <h3 class="font-display text-3xl font-light text-charcoal mb-6">{% trans "Place an Order" %}</h3>
+
+    <form id="order-form" class="flex flex-col gap-6" method="post" action="">
+      {% csrf_token %}
+      <div>
+        <input type="text" name="name" placeholder="{% trans 'Your Name' %}" class="form-input" required>
+      </div>
+      <div>
+        <input
+          type="tel"
+          name="phone"
+          placeholder="+998 90 123 45 67"
+          class="form-input"
+          pattern="\\+?998[\\s-]?\\d{2}[\\s-]?\\d{3}[\\s-]?\\d{2}[\\s-]?\\d{2}"
+          title="{% trans 'Phone format: +998 90 123 45 67' %}"
+          required>
+      </div>
+      <div>
+        <textarea name="message" placeholder="{% trans 'Message (optional)' %}" rows="3" class="form-input resize-none"></textarea>
+      </div>
+      <button type="submit" class="btn-accent mt-2">{% trans "Send Request" %}</button>
+    </form>
+
+    <div id="order-form-status" class="text-sm text-stone mt-3"></div>
+
+    <p class="text-xs text-stone mt-4 leading-relaxed">{% trans "We will contact you shortly to confirm your order details." %}</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ORDER SUCCESS (Auto-hide)
+═══════════════════════════════════════════ -->
+<div id="order-success-modal" class="modal-overlay" aria-live="polite">
+  <div class="modal-box order-success-box" role="status">
+    <div class="order-success-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6L9 17l-5-5"></path>
+      </svg>
+    </div>
+    <p class="order-success-text">
+      {% trans "Your request has been sent. Our admins will contact you soon." %}
+    </p>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

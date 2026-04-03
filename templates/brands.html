@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Brands" %}{% endblock %}
+{% block nav_brands %}active{% endblock %}
+
+{% block content %}
+<div class="pt-16 lg:pt-20">
+
+  <!-- Header -->
+  <div class="bg-cream py-16">
+    <div class="max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div class="flex items-center gap-3 mb-4">
+        <a href="{% url 'core:home' %}" class="breadcrumb-item">{% trans "Home" %}</a>
+        <span class="text-warm-gray text-xs">/</span>
+        <span class="text-xs uppercase tracking-widest text-charcoal">{% trans "Brands" %}</span>
+      </div>
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
+        <div>
+          <p class="section-label mb-3">{% trans "Our Partners" %}</p>
+          <h1 class="section-title">{% trans "Premium Brands" %}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brands Grid -->
+  <div class="max-w-screen-xl mx-auto px-6 lg:px-10 py-14">
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {% for brand in brands|default:'' %}
+      <a href="{{ brand.get_absolute_url }}" class="brand-card brand-item flex-col gap-3" data-name="{{ brand.name }}">
+        <span class="font-display text-xl font-light text-charcoal/70 text-center">{{ brand.name }}</span>
+      </a>
+      {% empty %}
+      <div class="col-span-full">
+        <p class="text-sm text-stone">{% trans "No brands available yet." %}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
